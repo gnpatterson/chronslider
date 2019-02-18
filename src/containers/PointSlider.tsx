@@ -1,7 +1,10 @@
 import * as React from "react";
-//import SliderPoint from "./components/SliderPoint";
-
+import SliderPoint from "../components/SliderPoint";
+import {IPoint} from '../types/IPoint';
 import "./PointSlider.css"
+
+import redball from '../images/ball_red.jpg';
+import greyball from '../images/ball_grey.jpg';
 
 // this controls one or more SliderPoints. we are
 // the slider and we control the points. we are a
@@ -14,18 +17,8 @@ import "./PointSlider.css"
 // (icon or text) and we catch events from them by
 // passing callbacks to ourself in the point's props.
 
-interface IPoint {
-    value: number;
+interface IProps {
 
-}
-
-export interface IProps {
-  name?: string;
-  type?: string;
-  value?: string;
-  onHover?: () => void;
-  onClick?: () => void;
-  onContextMenu?: () => void;
 }
 
 interface IState {
@@ -33,11 +26,19 @@ interface IState {
 
 }
 
+
 class PointSlider extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-        points: [{value: 20},{value: 40},{value: 60}]
+        points: [
+          {key: 0, name: '', icon: redball, size: 1, minutesFromStart: 0, minutesFromPrevious: 0},
+          {key: 1, name: '', icon: greyball, size: 1, minutesFromStart: 2, minutesFromPrevious: 2},
+          {key: 2, name: '', icon: greyball, size: 1, minutesFromStart: 4, minutesFromPrevious: 2},
+          {key: 3, name: '', icon: greyball, size: 1, minutesFromStart: 8, minutesFromPrevious: 4},
+          {key: 4, name: '', icon: greyball, size: 1, minutesFromStart: 16, minutesFromPrevious: 8},
+          {key: 5, name: '', icon: greyball, size: 1, minutesFromStart: 24, minutesFromPrevious: 8},
+          ]
     };
 
   }
@@ -57,33 +58,8 @@ class PointSlider extends React.Component<IProps, IState> {
   }
 
   displayPoints (): JSX.Element {
-    let offset = 0;
-    let offsetStyle = {};
-    let offsetPercent = "";
-    let offsetTotal = this.state.points.map(point => point.value).reduce((prev, next) => prev + next);
-    let tableStyle = { width: "100%" };
-
     return (
-      <div>
-          <table style={tableStyle}>
-              <tr>
-                  {this.state.points.map((point, i) => {
-                    offset += point.value;
-                    offsetPercent = (point.value / offsetTotal * 100).toString() + "%";
-                    offsetStyle = { width: offsetPercent, border: "1px solid black" }
-                    return <td style={offsetStyle}>{point.value}</td>
-                  })}
-              </tr>
-          </table>
-
-
-          {this.state.points.map((point, i) => {
-            offset += point.value;
-
-            offsetStyle = { display:"inline-block", marginLeft: offset}
-            return <span style={offsetStyle} onClick={this.onClick} onContextMenu={this.onContextMenu}>{point.value}</span>
-          })}
-      </div>
+      <SliderPoint points={this.state.points} />
     );
   }
 
